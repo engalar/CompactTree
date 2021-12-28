@@ -1,16 +1,67 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<widget id="com.mendix.widget.custom.compacttree.CompactTree" needsEntityContext="false" offlineCapable="true" supportedPlatform="Web"
+<widget id="com.mendix.widget.custom.compacttree.CompactTree" needsEntityContext="true" offlineCapable="true" supportedPlatform="Web"
     xmlns="http://www.mendix.com/widget/1.0/"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mendix.com/widget/1.0/ ../node_modules/mendix/custom_widget.xsd">
     <name>CompactTree</name>
     <description>CompactTree for Mendix</description>
     <icon></icon>
     <properties>
-        <propertyGroup caption="通用">
-            <property key="myString" type="string" required="false" multiline="false">
-                <caption>String</caption>
-                <description></description>
-            </property>
+        <propertyGroup caption="数据">
+            <propertyGroup caption="根节点">
+                <property key="rootEntity" type="entity" required="true" isPath="yes" pathType="reference" allowNonPersistableEntities="true">
+                    <caption>根实体</caption>
+                    <description></description>
+                </property>
+            </propertyGroup>
+            <propertyGroup caption="数据加载">
+                <property key="parentEntity" entityProperty="rootEntity" isPath="yes" pathType="reference" type="entity" required="true" allowNonPersistableEntities="true">
+                    <caption>上级实体</caption>
+                    <description></description>
+                </property>
+            </propertyGroup>
+        </propertyGroup>
+        <propertyGroup caption="选择">
+            <propertyGroup caption="数据">
+                <property key="selectedEntity" type="entity" required="true" isPath="yes" pathType="reference" allowNonPersistableEntities="true">
+                    <caption>选择实体</caption>
+                    <description></description>
+                </property>
+            </propertyGroup>
+            <propertyGroup caption="动作">
+                <property key="eventNodeOnClickAction" type="enumeration" defaultValue="nothing">
+                    <caption>单击动作类型</caption>
+                    <description></description>
+                    <enumerationValues>
+                        <enumerationValue key="nothing">啥也不做</enumerationValue>
+                        <enumerationValue key="microflow">微流</enumerationValue>
+                        <enumerationValue key="nanoflow">纳流</enumerationValue>
+                        <enumerationValue key="open">页面</enumerationValue>
+                    </enumerationValues>
+                </property>
+                <property key="eventNodeOnClickMicroflow" type="microflow" required="false">
+                    <caption>微流（选择动作）</caption>
+                    <description></description>
+                    <returnType type="Void" />
+                </property>
+                <property key="eventNodeOnClickNanoflow" type="nanoflow" required="false">
+                    <caption>纳流（选择动作）</caption>
+                    <description></description>
+                    <returnType type="Void" />
+                </property>
+                <property key="eventNodeOnClickForm" type="form" required="false">
+                    <caption>页面（选择动作）</caption>
+                    <description>The page to open when a Node is clicked</description>
+                </property>
+                <property key="eventNodeOnClickOpenPageAs" type="enumeration" defaultValue="content">
+                    <caption>页面布局（选择动作）</caption>
+                    <description/>
+                    <enumerationValues>
+                        <enumerationValue key="content">Full page</enumerationValue>
+                        <enumerationValue key="popup">Popup</enumerationValue>
+                        <enumerationValue key="modal">Blocking popup</enumerationValue>
+                    </enumerationValues>
+                </property>
+            </propertyGroup>
         </propertyGroup>
     </properties>
 </widget>

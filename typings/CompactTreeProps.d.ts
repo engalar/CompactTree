@@ -16,16 +16,33 @@ interface CommonProps {
     mxObject?: mendix.lib.MxObject;
     style: string;
 }
-
+export type FullAction = "nothing" | "microflow" | "nanoflow" | "open";
 export interface CompactTreeContainerProps extends CommonProps {
-    myString?: string;
+    rootEntity: string;
+    parentEntity: string;
+    selectedEntity: string;
+
+    eventNodeOnClickAction: FullAction;
+    eventNodeOnClickMicroflow: string;
+    eventNodeOnClickNanoflow: Nanoflow;
+    eventNodeOnClickForm: string;
+    eventNodeOnClickOpenPageAs: OpenPageAs;
 }
 
 export interface CompactTreePreviewProps {
     class: string;
     style: string;
     styleObject: CSSProperties;
-    myString?: string;
+
+    rootEntity: string;
+    parentEntity: string;
+    selectedEntity: string;
+
+    eventNodeOnClickAction: FullAction;
+    eventNodeOnClickMicroflow: string;
+    eventNodeOnClickNanoflow: Nanoflow;
+    eventNodeOnClickForm: string;
+    eventNodeOnClickOpenPageAs: OpenPageAs;
 }
 
 export interface VisibilityMap {
