@@ -1,1 +1,9 @@
 // @import "../../node_modules/antd/dist/antd";
+.mxcn-compact-tree-wrapper {
+    height: 100%;
+    display: flex;
+
+    .mxcn-compact-tree {
+      flex: 1;
+    }
+}

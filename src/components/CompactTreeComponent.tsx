@@ -19,12 +19,9 @@ export function CompactTreeComponent(props: CompactTreeComponentProps) {
             fetch('https://gw.alipayobjects.com/os/antvdemo/assets/data/algorithm-category.json')
                 .then((res) => res.json())
                 .then((data) => {
-                    const width = container.scrollWidth;
-                    const height = container.scrollHeight || 500;
                     const graph = new G6.TreeGraph({
                         container: container,
-                        width,
-                        height,
+                        fitCenter: true,
                         modes: {
                             default: ['collapse-expand', 'drag-canvas', 'zoom-canvas'],
                         },
@@ -74,6 +71,9 @@ export function CompactTreeComponent(props: CompactTreeComponentProps) {
             }) => {
                 if (graphInstance) {
                     console.log(size);
+                    if (size.width && size.height) {
+                        graphInstance.changeSize(size.width, size.height);
+                    }
                 }
             },
             [graphInstance],

@@ -22,14 +22,14 @@ export default function DivContainer(props: DivContainerProps) {
   }, [size]);
 
   return (
-    <div style={props.style} ref={e => {
-      if (!emited) {
-        setEmited(true);
-        props.ready(e);
-      }
-      ref2.current = e;
-    }}>
-      <div ref={ref}></div>
+    <div className="mxcn-compact-tree-wrapper" style={props.style} ref={ref2}>
+      <div className="mxcn-compact-tree" ref={e => {
+        if (!emited && e) {
+          setEmited(true);
+          props.ready(e);
+        }
+        ref.current = e;
+      }}></div>
     </div>
   )
 }
