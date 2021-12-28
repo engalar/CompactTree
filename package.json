@@ -1,6 +1,6 @@
 {
-  "name": "cascader",
-  "widgetName": "Cascader",
+  "name": "compacttree",
+  "widgetName": "CompactTree",
   "version": "1.0.0",
   "description": "Template repo for legacy custome wiget",
   "copyright": "2021 Mendix",
@@ -59,7 +59,7 @@
     "ahooks": "^2.10.14",
     "@bem-react/classname": "^1.5.6",
     "@jeltemx/mendix-react-widget-utils": "^0.9.0",
-    "antd": "^4.15.5",
+    "@antv/g6": "^4.5.1",
     "big.js": "^5.2.2",
     "classnames": "^2.2.6",
     "mobx": "^6.3.10",

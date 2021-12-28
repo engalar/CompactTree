@@ -1,10 +1,9 @@
 /**
- * This file was generated from Cascader.xml
+ * This file was generated from CompactTree.xml
  * WARNING: All changes made to this file will be overwritten
  * @author Mendix Widgets Team
  */
 import { CSSProperties } from "react";
-import { EditableValue } from "mendix";
 
 interface CommonProps {
     name: string;
@@ -18,15 +17,15 @@ interface CommonProps {
     style: string;
 }
 
-export interface CascaderContainerProps extends CommonProps {
-    myString: string;
+export interface CompactTreeContainerProps extends CommonProps {
+    myString?: string;
 }
 
-export interface CascaderPreviewProps {
+export interface CompactTreePreviewProps {
     class: string;
     style: string;
     styleObject: CSSProperties;
-    myString: string;
+    myString?: string;
 }
 
 export interface VisibilityMap {

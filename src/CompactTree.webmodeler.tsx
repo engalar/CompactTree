@@ -1,14 +1,14 @@
 import { Component, ReactNode, createElement } from "react";
-import { CascaderPreviewProps } from "../typings/CascaderProps";
+import { CompactTreePreviewProps } from "../typings/CompactTreeProps";
 
 declare function require(name: string): string;
 
-export class preview extends Component<CascaderPreviewProps> {
+export class preview extends Component<CompactTreePreviewProps> {
     render(): ReactNode {
         return <div>No preview available</div>;
     }
 }
 
 export function getPreviewCss(): string {
-    return require("./ui/Cascader.scss");
+    return require("./ui/CompactTree.scss");
 }
