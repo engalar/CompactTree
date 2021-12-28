@@ -1,10 +1,10 @@
-import { createElement, CSSProperties, useCallback, useState } from "react";
+import { createElement, CSSProperties, useCallback, useEffect, useState } from "react";
 import { useObserver } from "mobx-react";
 import { Store } from "../store";
 
 import '../hooks/G6';
 import DivContainer from "./DivContainer";
-import G6, { Graph } from "@antv/g6";
+import G6, { INode, TreeGraph } from "@antv/g6";
 
 export interface CompactTreeComponentProps {
     store: Store;
@@ -13,7 +13,7 @@ export interface CompactTreeComponentProps {
 
 export function CompactTreeComponent(props: CompactTreeComponentProps) {
     console.log(props);
-    const [graphInstance, setGraphInstance] = useState<Graph>();
+    const [graphInstance, setGraphInstance] = useState<TreeGraph>();
     const ready = useCallback(
         (container: any) => {
             fetch('https://gw.alipayobjects.com/os/antvdemo/assets/data/algorithm-category.json')
@@ -63,6 +63,17 @@ export function CompactTreeComponent(props: CompactTreeComponentProps) {
         [],
     );
 
+    useEffect(() => {
+        if (graphInstance) {
+            //https://g6.antv.vision/zh/docs/api/Event#node-%E4%BA%A4%E4%BA%92%E4%BA%8B%E4%BB%B6
+            graphInstance.on('node:click', ({ item }) => {
+                console.log((item as INode));
+            });
+        }
+        return () => {
+        }
+    }, [graphInstance])
+
     const update =
         useCallback(
             (size: {
@@ -70,9 +81,9 @@ export function CompactTreeComponent(props: CompactTreeComponentProps) {
                 height?: number;
             }) => {
                 if (graphInstance) {
-                    console.log(size);
                     if (size.width && size.height) {
                         graphInstance.changeSize(size.width, size.height);
+                        graphInstance.refreshLayout(true);
                     }
                 }
             },
