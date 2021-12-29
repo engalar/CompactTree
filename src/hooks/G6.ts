@@ -24,7 +24,7 @@ if (!window["com.mendix.widget.custom.compacttree.CompactTree"]) {
             });
             const label = group!.addShape("text", {
                 attrs: {
-                    text: cfg!.id,
+                    text: cfg!.label,
                     fill: "#ccc",
                     fontSize,
                     x: 0,

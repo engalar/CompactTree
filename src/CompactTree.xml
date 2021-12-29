@@ -12,6 +12,13 @@
                     <caption>根实体</caption>
                     <description></description>
                 </property>
+                <property key="labelAttribute" type="attribute" entityProperty="rootEntity" required="true">
+                    <caption>显示标题</caption>
+                    <description></description>
+                    <attributeTypes>
+                        <attributeType name="String" />
+                    </attributeTypes>
+                </property>
             </propertyGroup>
             <propertyGroup caption="数据加载">
                 <property key="parentEntity" entityProperty="rootEntity" isPath="yes" pathType="reference" type="entity" required="true" allowNonPersistableEntities="true">

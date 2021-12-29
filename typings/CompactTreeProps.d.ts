@@ -19,6 +19,7 @@ interface CommonProps {
 export type FullAction = "nothing" | "microflow" | "nanoflow" | "open";
 export interface CompactTreeContainerProps extends CommonProps {
     rootEntity: string;
+    labelAttribute: string;
     parentEntity: string;
     selectedEntity: string;
 
