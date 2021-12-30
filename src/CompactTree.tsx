@@ -5,7 +5,6 @@ import { CompactTreeContainerProps } from "../typings/CompactTreeProps";
 
 import "./ui/CompactTree.scss";
 
-import { useObserver } from "mobx-react";
 import { Store } from "./store";
 import { CompactTreeComponent } from "./components/CompactTreeComponent";
 import { Skeleton } from "antd";
@@ -36,8 +35,5 @@ export default function CompactTree(props: CompactTreeContainerProps) {
         }
     }, [props.mxObject])
 
-
-    return useObserver(() => (
-        store ? <CompactTreeComponent style={parseStyle(props.style)} store={store} /> : <Skeleton active></Skeleton>
-    ));
+    return store ? <CompactTreeComponent style={parseStyle(props.style)} store={store} /> : <Skeleton active></Skeleton>
 }

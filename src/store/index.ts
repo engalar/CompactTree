@@ -8,6 +8,7 @@ configure({ enforceActions: "observed", isolateGlobalState: true, useProxies: "n
 
 export class Store {
     public options: Map<string, OptionItem> = new Map();
+    rootGuid?: string;
     treeData?: TreeGraphData;
     /**
      * dispose
@@ -18,26 +19,29 @@ export class Store {
     }
     loadWrapper: (guid?: string) => void;
     constructor(public mxOption: CompactTreeContainerProps) {
-        makeObservable(this, { options: observable, load: flow.bound, treeData: observable });
+        makeObservable(this, { options: observable, load: flow.bound, treeData: observable, rootGuid: observable });
         this.loadWrapper = this.load.bind(this);
         this.load();
     }
 
     *load(guid?: string) {
         if (guid) {
-            const objs: mendix.lib.MxObject[] = yield fetchByXpath(
-                this.mxOption.mxObject!,
-                getReferencePart(this.mxOption.rootEntity, "entity"),
-                `[${getReferencePart(this.mxOption.parentEntity, "referenceAttr")}=${guid}]`
-            );
+            if (!this.options.get(guid)!.childGuids) {
+                const objs: mendix.lib.MxObject[] = yield fetchByXpath(
+                    this.mxOption.mxObject!,
+                    getReferencePart(this.mxOption.rootEntity, "entity"),
+                    `[${getReferencePart(this.mxOption.parentEntity, "referenceAttr")}=${guid}]`
+                );
 
-            runInAction(() => {
-            for (const obj of objs) {
-                this.options.set(obj.getGuid(), new OptionItem(obj.getGuid(), this));
+                runInAction(() => {
+                    for (const obj of objs) {
+                        this.options.set(obj.getGuid(), new OptionItem(obj.getGuid(), this));
+                    }
+
+                    this.options.get(guid)!.childGuids = objs.map(d => d.getGuid());
+                    this.treeData = this.options.get(this.rootGuid!)?.treeData;
+                });
             }
-
-            this.options.get(guid)!.childGuids = objs.map(d => d.getGuid());
-            });
         } else {
             const rootGuid = this.mxOption.mxObject!.getReference(
                 getReferencePart(this.mxOption.rootEntity, "referenceAttr")
@@ -48,6 +52,7 @@ export class Store {
 
             this.options.set(rootGuid, rootOption);
             this.treeData = rootOption.treeData;
+            this.rootGuid = rootGuid;
         }
     }
 }

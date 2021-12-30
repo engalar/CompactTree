@@ -1,5 +1,4 @@
 import { createElement, CSSProperties, useCallback, useEffect, useState } from "react";
-import { useObserver } from "mobx-react";
 import { Store } from "../store";
 
 import '../hooks/G6';
@@ -75,7 +74,7 @@ export function CompactTreeComponent(props: CompactTreeComponentProps) {
         return () => {
             dis && dis();
         }
-    }, [graphInstance])
+    }, [graphInstance]);
 
     const update =
         useCallback(
@@ -93,8 +92,6 @@ export function CompactTreeComponent(props: CompactTreeComponentProps) {
             [graphInstance],
         )
 
-    return useObserver(() => (
-        <DivContainer style={props.style} update={update} ready={ready}></DivContainer>
-    ));
+    return <DivContainer style={props.style} update={update} ready={ready}></DivContainer>;
 }
 
