@@ -3,8 +3,7 @@ import { Store } from "../store";
 
 import '../hooks/G6';
 import DivContainer from "./DivContainer";
-import G6, { TreeGraph } from "@antv/g6";
-import { autorun, IReactionDisposer } from "mobx";
+import G6, { INode, TreeGraph } from "@antv/g6";
 
 export interface CompactTreeComponentProps {
     store: Store;
@@ -57,22 +56,14 @@ export function CompactTreeComponent(props: CompactTreeComponentProps) {
     );
 
     useEffect(() => {
-        let dis: IReactionDisposer | undefined;
         if (graphInstance) {
+            props.store.graph = graphInstance;
             //https://g6.antv.vision/zh/docs/api/Event#node-%E4%BA%A4%E4%BA%92%E4%BA%8B%E4%BB%B6
             graphInstance.on('node:click', ({ item }) => {
-                props.store.loadWrapper(item!.getID());
-            });
-
-            dis = autorun(() => {
-                if (props.store.treeData) {
-                    graphInstance.data(props.store.treeData);
-                    graphInstance.render();
-                }
+                props.store.loadWrapper(item as INode);
             });
         }
         return () => {
-            dis && dis();
         }
     }, [graphInstance]);
 

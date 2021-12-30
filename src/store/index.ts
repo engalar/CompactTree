@@ -1,15 +1,14 @@
-import { TreeGraphData } from "@antv/g6";
+import { INode, TreeGraph } from "@antv/g6";
 import { fetchByXpath, getObject, getReferencePart } from "@jeltemx/mendix-react-widget-utils";
-import { configure, flow, makeObservable, observable, runInAction } from "mobx";
+import { configure, flow, makeObservable, observable } from "mobx";
 import { CompactTreeContainerProps } from "../../typings/CompactTreeProps";
 import { OptionItem } from "./objects/OptionItem";
 
 configure({ enforceActions: "observed", isolateGlobalState: true, useProxies: "never" });
 
 export class Store {
+    public graph?: TreeGraph;
     public options: Map<string, OptionItem> = new Map();
-    rootGuid?: string;
-    treeData?: TreeGraphData;
     /**
      * dispose
      */
@@ -17,30 +16,36 @@ export class Store {
         this.options.forEach(d => d.dispose());
         this.options = new Map();
     }
-    loadWrapper: (guid?: string) => void;
+    loadWrapper: (node?: INode) => void;
     constructor(public mxOption: CompactTreeContainerProps) {
-        makeObservable(this, { options: observable, load: flow.bound, treeData: observable, rootGuid: observable });
+        makeObservable(this, { options: observable, load: flow.bound });
         this.loadWrapper = this.load.bind(this);
         this.load();
     }
 
-    *load(guid?: string) {
+    *load(node?: INode) {
+        const guid = node?.getID();
         if (guid) {
-            if (!this.options.get(guid)!.childGuids) {
+            const selectedOption = this.options.get(guid)!;
+            if (!selectedOption.childGuids) {
+                // 需要加载
                 const objs: mendix.lib.MxObject[] = yield fetchByXpath(
                     this.mxOption.mxObject!,
                     getReferencePart(this.mxOption.rootEntity, "entity"),
                     `[${getReferencePart(this.mxOption.parentEntity, "referenceAttr")}=${guid}]`
                 );
 
-                runInAction(() => {
-                    for (const obj of objs) {
-                        this.options.set(obj.getGuid(), new OptionItem(obj.getGuid(), this));
-                    }
+                for (const obj of objs) {
+                    this.options.set(obj.getGuid(), new OptionItem(obj.getGuid(), this));
+                }
 
-                    this.options.get(guid)!.childGuids = objs.map(d => d.getGuid());
-                    this.treeData = this.options.get(this.rootGuid!)?.treeData;
-                });
+                this.options.get(guid)!.childGuids = objs.map(d => d.getGuid());
+
+                this.graph!.findDataById(guid)!.children = this.options.get(guid)!.children;
+                this.graph?.changeData();
+            } else {
+                // console.log(node);
+                // node?.set("collapsed", false);
             }
         } else {
             const rootGuid = this.mxOption.mxObject!.getReference(
@@ -51,8 +56,7 @@ export class Store {
             const rootOption = new OptionItem(rootGuid, this);
 
             this.options.set(rootGuid, rootOption);
-            this.treeData = rootOption.treeData;
-            this.rootGuid = rootGuid;
+            this.graph?.changeData(rootOption.treeData);
         }
     }
 }
