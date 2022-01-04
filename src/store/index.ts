@@ -9,6 +9,7 @@ configure({ enforceActions: "observed", isolateGlobalState: true, useProxies: "n
 export class Store {
     public graph?: TreeGraph;
     public options: Map<string, OptionItem> = new Map();
+    rootGuid?: string;
     /**
      * dispose
      */
@@ -56,14 +57,14 @@ export class Store {
                 }
             }
         } else {
-            const rootGuid = this.mxOption.mxObject!.getReference(
+            this.rootGuid = this.mxOption.mxObject!.getReference(
                 getReferencePart(this.mxOption.rootEntity, "referenceAttr")
             );
 
-            yield getObject(rootGuid);
-            const rootOption = new OptionItem(rootGuid, this);
+            yield getObject(this.rootGuid);
+            const rootOption = new OptionItem(this.rootGuid, this);
 
-            this.options.set(rootGuid, rootOption);
+            this.options.set(this.rootGuid, rootOption);
             this.graph?.changeData(rootOption.treeData);
         }
     }

@@ -20,6 +20,7 @@ export function CompactTreeComponent(props: CompactTreeComponentProps) {
         const graph = new G6.TreeGraph({
             container: graphRef.current,
             fitCenter: true,
+            renderer: 'svg',
             modes: {
                 default: ['collapse-expand', 'drag-canvas', 'zoom-canvas'],
             },

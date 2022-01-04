@@ -35,5 +35,5 @@ export default function CompactTree(props: CompactTreeContainerProps) {
         }
     }, [props.mxObject])
 
-    return store ? <CompactTreeComponent style={parseStyle(props.style)} store={store} /> : <Skeleton active></Skeleton>
+    return store && store.rootGuid ? <CompactTreeComponent style={parseStyle(props.style)} store={store} /> : <Skeleton active></Skeleton>
 }
