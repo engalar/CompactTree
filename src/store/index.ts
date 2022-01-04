@@ -30,27 +30,30 @@ export class Store {
             if (!selectedOption.childGuids) {
                 // 需要加载
                 this.graph?.setItemState(this.graph!.findById(guid)!, "loading", true);
+
                 const objs: mendix.lib.MxObject[] = yield fetchByXpath(
                     this.mxOption.mxObject!,
                     getReferencePart(this.mxOption.rootEntity, "entity"),
                     `[${getReferencePart(this.mxOption.parentEntity, "referenceAttr")}=${guid}]`
                 );
 
-                this.graph?.clearItemStates(this.graph!.findById(guid)!, "loading");
-
                 for (const obj of objs) {
                     this.options.set(obj.getGuid(), new OptionItem(obj.getGuid(), this));
                 }
 
                 this.options.get(guid)!.childGuids = objs.map(d => d.getGuid());
-
                 this.graph!.findDataById(guid)!.children = this.options.get(guid)!.children;
-                if (objs.length === 0) {
+
+                this.graph?.clearItemStates(this.graph!.findById(guid)!, "loading");
+
+                // 更新状态
+                if (this.options.get(guid)!.childGuids?.length === 0) {
+                    this.graph!.findById(guid)!.getModel().status = "notail";
                     this.graph?.setItemState(this.graph!.findById(guid)!, "notail", true);
                 } else {
-                    this.graph?.changeData();
+                    this.graph!.findById(guid)!.getModel().status = "normal";
+                    this.graph?.updateChildren(this.options.get(guid)!.children!, guid);
                 }
-            } else {
             }
         } else {
             const rootGuid = this.mxOption.mxObject!.getReference(

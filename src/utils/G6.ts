@@ -1,4 +1,4 @@
-import G6, { Item } from "@antv/g6";
+import G6, { Item, ModelConfig, UpdateType } from "@antv/g6";
 const fontSize = 15;
 
 //@ts-ignore
@@ -25,7 +25,7 @@ if (!window["com.mendix.widget.custom.compacttree.CompactTree"]) {
         },
         draw: (cfg, group) => {
             const width = (cfg as any).id.length * 10;
-            const rect = group!.addShape("rect", {
+            const keyShape = group!.addShape("rect", {
                 attrs: {
                     x: 0,
                     y: -10,
@@ -49,20 +49,23 @@ if (!window["com.mendix.widget.custom.compacttree.CompactTree"]) {
                 name: "label-shape",
                 draggable: true
             });
-            const labelBBox = label.getBBox();
-            group!.addShape("circle", {
-                attrs: {
-                    x: labelBBox.maxX + 10,
-                    y: (labelBBox.minY + labelBBox.maxY) / 2,
-                    r: 5,
-                    stroke: "red"
-                },
-                name: "circle-shape",
-                draggable: true
-            });
-            const bboxWidth = label.getBBox().width + 20;
-            rect.attr({ width: bboxWidth });
 
+            if (cfg!.status !== "notail") {
+                const labelBBox = label.getBBox();
+                group!.addShape("circle", {
+                    attrs: {
+                        x: labelBBox.maxX + 10,
+                        y: (labelBBox.minY + labelBBox.maxY) / 2,
+                        r: 5,
+                        stroke: "red"
+                    },
+                    name: "circle-shape",
+                    draggable: true
+                });
+            }
+
+            const bboxWidth = label.getBBox().width + 20;
+            keyShape.attr({ width: bboxWidth });
             group!.addShape("path", {
                 attrs: {
                     lineWidth: 1,
@@ -77,7 +80,7 @@ if (!window["com.mendix.widget.custom.compacttree.CompactTree"]) {
                 draggable: true
             });
 
-            return rect;
+            return keyShape;
         },
         getAnchorPoints: _cfg => {
             return [
@@ -96,6 +99,9 @@ if (!window["com.mendix.widget.custom.compacttree.CompactTree"]) {
                     shape.attr("opacity", 1);
                 }
             }
+        },
+        update: (cfg: ModelConfig, item: Item, updateType?: UpdateType) => {
+            console.log(cfg, item, updateType);
         }
     });
 }

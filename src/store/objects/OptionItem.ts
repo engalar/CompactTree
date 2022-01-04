@@ -15,7 +15,8 @@ export class OptionItem extends BaseMxObject {
     public get treeData(): TreeGraphData {
         return {
             id: this.guid,
-            label: this.mxObject.get(this.store.mxOption.labelAttribute) as string
+            label: this.mxObject.get(this.store.mxOption.labelAttribute) as string,
+            status: this.childGuids ? (this.childGuids.length > 0 ? "normal" : "notail") : "pending"
         };
     }
 
